@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLox", "NLox\NLox.csproj", "{61ADF80F-8CE6-4E38-975D-1D437E9F4A0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLox", "NLox\NLox.csproj", "{61ADF80F-8CE6-4E38-975D-1D437E9F4A0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nlox.CodeGen", "Nlox.CodeGen\Nlox.CodeGen.csproj", "{F11DA8CA-1823-46C9-877F-FEB8848D6141}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{61ADF80F-8CE6-4E38-975D-1D437E9F4A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61ADF80F-8CE6-4E38-975D-1D437E9F4A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61ADF80F-8CE6-4E38-975D-1D437E9F4A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
