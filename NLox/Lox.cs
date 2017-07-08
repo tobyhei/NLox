@@ -6,7 +6,9 @@ namespace NLox
 {
     internal class Lox
     {
+        private static readonly Interpreter interpreter = new Interpreter();
         private static bool hadError;
+        private static bool hadRuntimeError;
 
         private static void Main(string[] args)
         {
@@ -24,24 +26,10 @@ namespace NLox
             }
         }
 
-        //public static void Main(string[] args)
-        //{
-        //    Expr expression = new Expr.Binary(
-        //        new Expr.Unary(
-        //            new Token(TokenType.MINUS, "-", null, 1),
-        //            new Expr.Literal(123)),
-        //        new Token(TokenType.STAR, "*", null, 1),
-        //        new Expr.Grouping(
-        //            new Expr.Literal(45.67)));
-
-        //    Console.WriteLine(new AstPrinter().print(expression));
-        //    Console.Read();
-        //}
-
         private static void runFile(string path)
         {
             byte[] bytes = File.ReadAllBytes(path);
-            Run(Convert.ToString(bytes, CultureInfo.InvariantCulture));
+            run(Convert.ToString(bytes, CultureInfo.InvariantCulture));
         }
 
         private static void runPrompt()
@@ -50,28 +38,49 @@ namespace NLox
             {
                 var line = Console.ReadLine();
                 Console.WriteLine("> ");
-                Run(line);
+                run(line);
             }
         }
 
-        private static void Run(string source)
+        private static void run(string source)
         {
             var scanner = new Scanner(source);
             var tokens = scanner.ScanTokens();
 
-            // For now, just print the tokens.
-            foreach (var token in tokens)
-            {
-                Console.WriteLine(token);
-            }
+            Parser parser = new Parser(tokens);
+            Expr expression = parser.parse();
+
+            // Stop if there was a syntax error.
+            if (hadError) Environment.Exit(65);
+            if (hadRuntimeError) Environment.Exit(70);
+
+            interpreter.interpret(expression);
         }
 
         public static void error(int line, string message)
         {
-            Report(line, "", message);
+            report(line, "", message);
         }
 
-        private static void Report(int line, string where, string message)
+        public static void error(Token token, string message)
+        {
+            if (token.type == TokenType.EOF)
+            {
+                report(token.line, " at end", message);
+            }
+            else
+            {
+                report(token.line, " at '" + token.lexeme + "'", message);
+            }
+        }
+
+        public static void runtimeError(RuntimeError error)
+        {
+            Console.WriteLine($"{error.Message} \n[line {error.token.line}]");
+            hadRuntimeError = true;
+        }
+
+        private static void report(int line, string where, string message)
         {
             Console.WriteLine("[line " + line + "] error" + where + ": " + message);
             hadError = true;
