@@ -14,7 +14,6 @@ namespace NLox
 
         public string visitGroupingExpr(Expr.Grouping expr)
             => parenthesize("group", expr.expression);
-        
 
         public string visitLiteralExpr(Expr.Literal expr)
             => expr.value == null ? "nil" : expr.value.ToString();
@@ -36,5 +35,11 @@ namespace NLox
 
             return builder.ToString();
         }
+
+        public string visitVariableExpr(Expr.Variable expr)
+            => parenthesize(expr.name.lexeme);
+
+        public string visitAssignExpr(Expr.Assign expr)
+            => parenthesize(expr.name.lexeme, expr.value);
     }
 }

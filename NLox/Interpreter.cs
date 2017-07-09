@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using NLox.Misc;
 
 namespace NLox
 {
-    public class Interpreter : Expr.IVisitor<object>
+    public class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<Unit>
     {
-        public void interpret(Expr expression)
+        private Environment environment = new Environment();
+
+        public void interpret(IEnumerable<Stmt> stmts)
         {
             try
             {
-                object value = evaluate(expression);
-                Console.WriteLine(stringify(value));
+                foreach (var stmt in stmts)
+                {
+                    execute(stmt);
+                }
             }
             catch (RuntimeError error)
             {
@@ -100,6 +106,8 @@ namespace NLox
 
         private object evaluate(Expr expr) => expr.accept(this);
 
+        private Unit execute(Stmt stmt) => stmt.accept(this);
+
         private static bool isTruthy(object @object)
         {
             if (@object == null) return false;
@@ -121,6 +129,66 @@ namespace NLox
         {
             if (operand is double) return;
             throw new RuntimeError(@operator, "Operand must be a number.");
+        }
+
+        Unit Stmt.IVisitor<Unit>.visitExpressionStmt(Stmt.Expression stmt)
+        {
+            evaluate(stmt.expression);
+            return Unit.value;
+        }
+
+        Unit Stmt.IVisitor<Unit>.visitPrintStmt(Stmt.Print stmt)
+        {
+            var value = evaluate(stmt.expression);
+            Console.WriteLine(stringify(value));
+            return Unit.value;
+        }
+
+        public Unit visitVarStmt(Stmt.Var stmt)
+        {
+            object value = null;
+            if (stmt.initializer != null)
+            {
+                value = evaluate(stmt.initializer);
+            }
+
+            environment.define(stmt.name.lexeme, value);
+            return Unit.value;
+        }
+
+        public object visitVariableExpr(Expr.Variable expr)
+            => environment.get(expr.name);
+
+        public object visitAssignExpr(Expr.Assign expr)
+        {
+            object value = evaluate(expr.value);
+
+            environment.assign(expr.name, value);
+            return value;
+        }
+
+        public Unit visitBlockStmt(Stmt.Block stmt)
+        {
+            executeBlock(stmt.statements, new Environment(environment));
+            return Unit.value;
+        }
+
+        private void executeBlock(IEnumerable<Stmt> statements, Environment environment)
+        {
+            var previous = this.environment;
+            try
+            {
+                this.environment = environment;
+
+                foreach (var statement in statements)
+                {
+                    execute(statement);
+                }
+            }
+            finally
+            {
+                this.environment = previous;
+            }
         }
     }
 }

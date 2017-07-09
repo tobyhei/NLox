@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLox", "NLox\NLox.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nlox.CodeGen", "Nlox.CodeGen\Nlox.CodeGen.csproj", "{F11DA8CA-1823-46C9-877F-FEB8848D6141}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLox.Misc", "NLox.Misc\NLox.Misc.csproj", "{4C87C64E-E79D-4D10-ADF6-461AAED88648}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F11DA8CA-1823-46C9-877F-FEB8848D6141}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C87C64E-E79D-4D10-ADF6-461AAED88648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C87C64E-E79D-4D10-ADF6-461AAED88648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C87C64E-E79D-4D10-ADF6-461AAED88648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C87C64E-E79D-4D10-ADF6-461AAED88648}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -54,7 +54,8 @@ namespace NLox
 
         private void scanToken()
         {
-            switch (advance())
+            char next = advance();
+            switch (next)
             {
                 case '(': addToken(TokenType.LEFT_PAREN); break;
                 case ')': addToken(TokenType.RIGHT_PAREN); break;
@@ -83,7 +84,8 @@ namespace NLox
                 case '\n':
                     line++;
                     break;
-                case '"': consumeString(); break;
+                case '\"': consumeString(); break;
+                case '\'': consumeString(); break;
                 case 'o':
                     if (peek() == 'r')
                     {

@@ -7,10 +7,29 @@ namespace NLox {
 
         public interface IVisitor<TR>
         {
+            TR visitAssignExpr(Assign expr);
             TR visitBinaryExpr(Binary expr);
             TR visitGroupingExpr(Grouping expr);
             TR visitLiteralExpr(Literal expr);
             TR visitUnaryExpr(Unary expr);
+            TR visitVariableExpr(Variable expr);
+        }
+
+        public class Assign : Expr
+        {
+            public readonly Token name;
+            public readonly Expr value;
+
+            public Assign(Token name, Expr value)
+            {
+                this.name = name;
+                this.value = value;
+            }
+
+            public override TR accept<TR>(IVisitor<TR> visitor)
+            {
+                return visitor.visitAssignExpr(this);
+            }
         }
 
         public class Binary : Expr
@@ -76,6 +95,21 @@ namespace NLox {
             public override TR accept<TR>(IVisitor<TR> visitor)
             {
                 return visitor.visitUnaryExpr(this);
+            }
+        }
+
+        public class Variable : Expr
+        {
+            public readonly Token name;
+
+            public Variable(Token name)
+            {
+                this.name = name;
+            }
+
+            public override TR accept<TR>(IVisitor<TR> visitor)
+            {
+                return visitor.visitVariableExpr(this);
             }
         }
     }

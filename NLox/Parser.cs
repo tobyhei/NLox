@@ -12,21 +12,91 @@ namespace NLox
             this.tokens = tokens;
         }
 
-        public Expr parse()
+        public List<Stmt> parse()
+        {
+            var statements = new List<Stmt>();
+            while (!isAtEnd())
+            {
+                statements.Add(declaration());
+            }
+
+            return statements;
+        }
+
+        private Stmt declaration()
         {
             try
             {
-                return expression();
+                if (match(TokenType.VAR)) return varDeclaration();
+
+                return statement();
             }
             catch (ParseError)
             {
+                synchronize();
                 return null;
             }
         }
 
+        private Stmt varDeclaration()
+        {
+            Token name = consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+            Expr initializer = null;
+            if (match(TokenType.EQUAL))
+            {
+                initializer = expression();
+            }
+
+            consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+            return new Stmt.Var(name, initializer);
+        }
+
+        private Stmt statement()
+        {
+            if (match(TokenType.PRINT)) return printStatement();
+            if (match(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
+
+            return expressionStatement();
+        }
+
+        private Stmt printStatement()
+        {
+            Expr value = expression();
+            consume(TokenType.SEMICOLON, "Expect ';' after value.");
+            return new Stmt.Print(value);
+        }
+
+        private Stmt expressionStatement()
+        {
+            Expr expr = expression();
+            consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+            return new Stmt.Expression(expr);
+        }
+
         private Expr expression()
         {
-            return equality();
+            return assignment();
+        }
+
+        private Expr assignment()
+        {
+            Expr expr = equality();
+
+            if (match(TokenType.EQUAL))
+            {
+                Token equals = previous();
+                Expr value = assignment();
+
+                if (expr is Expr.Variable ev) {
+                    Token name = ev.name;
+                    return new Expr.Assign(name, value);
+                }
+
+                error(equals, "Invalid assignment target.");
+            }
+
+            return expr;
         }
 
         private Expr equality()
@@ -140,6 +210,11 @@ namespace NLox
                 return new Expr.Literal(previous().literal);
             }
 
+            if (match(TokenType.IDENTIFIER))
+            {
+                return new Expr.Variable(previous());
+            }
+
             if (match(TokenType.LEFT_PAREN))
             {
                 Expr expr = expression();
@@ -155,6 +230,19 @@ namespace NLox
             if (check(type)) return advance();
 
             throw error(peek(), message);
+        }
+
+        private List<Stmt> block()
+        {
+            var statements = new List<Stmt>();
+
+            while (!check(TokenType.RIGHT_BRACE) && !isAtEnd())
+            {
+                statements.Add(declaration());
+            }
+
+            consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+            return statements;
         }
 
         private ParseError error(Token token, string message)

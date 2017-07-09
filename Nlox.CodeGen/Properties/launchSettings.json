@@ -2,7 +2,7 @@
   "profiles": {
     "Nlox.CodeGen": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\toby\\Documents\\Visual Studio 2017\\Projects\\NLox\\NLox\""
+      "commandLineArgs": "\"C:\\Users\\toby\\Documents\\Visual Studio 2017\\Projects\\NLox\\NLox\\CodeGen\""
     }
   }
 }

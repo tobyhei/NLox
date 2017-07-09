@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace NLox
 {
@@ -16,7 +16,7 @@ namespace NLox
             {
                 Console.WriteLine("Usage: nlox [script]");
             }
-            else if (args.Length == 1)
+            else if (true && args.Length == 1)
             {
                 runFile(args[0]);
             }
@@ -29,7 +29,10 @@ namespace NLox
         private static void runFile(string path)
         {
             byte[] bytes = File.ReadAllBytes(path);
-            run(Convert.ToString(bytes, CultureInfo.InvariantCulture));
+            var source = Encoding.UTF8.GetString(bytes);
+            source = source.Trim('\uFEFF', '\u200B');
+            run(source);
+            Console.ReadLine();
         }
 
         private static void runPrompt()
@@ -48,13 +51,13 @@ namespace NLox
             var tokens = scanner.ScanTokens();
 
             Parser parser = new Parser(tokens);
-            Expr expression = parser.parse();
+            var statements = parser.parse();
 
             // Stop if there was a syntax error.
-            if (hadError) Environment.Exit(65);
-            if (hadRuntimeError) Environment.Exit(70);
+            if (hadError) System.Environment.Exit(65);
 
-            interpreter.interpret(expression);
+            interpreter.interpret(statements);
+            if (hadRuntimeError) System.Environment.Exit(70);
         }
 
         public static void error(int line, string message)

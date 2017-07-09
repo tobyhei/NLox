@@ -1,7 +1,8 @@
 {
   "profiles": {
     "NLox": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "example.lox"
     }
   }
 }
