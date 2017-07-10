@@ -173,6 +173,19 @@ namespace NLox
             return Unit.value;
         }
 
+        public Unit visitIfStmt(Stmt.If stmt)
+        {
+            if (isTruthy(evaluate(stmt.condition)))
+            {
+                execute(stmt.thenBranch);
+            }
+            else if (stmt.elseBranch != null)
+            {
+                execute(stmt.elseBranch);
+            }
+            return Unit.value;
+        }
+
         private void executeBlock(IEnumerable<Stmt> statements, Environment environment)
         {
             var previous = this.environment;
@@ -189,6 +202,32 @@ namespace NLox
             {
                 this.environment = previous;
             }
+        }
+
+        public object visitLogicalExpr(Expr.Logical expr)
+        {
+            object left = evaluate(expr.left);
+
+            if (expr.@operator.type == TokenType.OR)
+            {
+                if (isTruthy(left)) return left;
+            }
+            else
+            {
+                if (!isTruthy(left)) return left;
+            }
+
+            return evaluate(expr.right);
+        }
+
+        public Unit visitWhileStmt(Stmt.While stmt)
+        {
+            while (isTruthy(evaluate(stmt.condition)))
+            {
+                execute(stmt.body);
+            }
+
+            return Unit.value;
         }
     }
 }

@@ -15,4 +15,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CodeGen\" />
+  </ItemGroup>
+
 </Project>

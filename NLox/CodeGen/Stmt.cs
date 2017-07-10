@@ -9,8 +9,10 @@ namespace NLox {
         {
             TR visitBlockStmt(Block stmt);
             TR visitExpressionStmt(Expression stmt);
+            TR visitIfStmt(If stmt);
             TR visitPrintStmt(Print stmt);
             TR visitVarStmt(Var stmt);
+            TR visitWhileStmt(While stmt);
         }
 
         public class Block : Stmt
@@ -43,6 +45,25 @@ namespace NLox {
             }
         }
 
+        public class If : Stmt
+        {
+            public readonly Expr condition;
+            public readonly Stmt thenBranch;
+            public readonly Stmt elseBranch;
+
+            public If(Expr condition, Stmt thenBranch, Stmt elseBranch)
+            {
+                this.condition = condition;
+                this.thenBranch = thenBranch;
+                this.elseBranch = elseBranch;
+            }
+
+            public override TR accept<TR>(IVisitor<TR> visitor)
+            {
+                return visitor.visitIfStmt(this);
+            }
+        }
+
         public class Print : Stmt
         {
             public readonly Expr expression;
@@ -72,6 +93,23 @@ namespace NLox {
             public override TR accept<TR>(IVisitor<TR> visitor)
             {
                 return visitor.visitVarStmt(this);
+            }
+        }
+
+        public class While : Stmt
+        {
+            public readonly Expr condition;
+            public readonly Stmt body;
+
+            public While(Expr condition, Stmt body)
+            {
+                this.condition = condition;
+                this.body = body;
+            }
+
+            public override TR accept<TR>(IVisitor<TR> visitor)
+            {
+                return visitor.visitWhileStmt(this);
             }
         }
     }

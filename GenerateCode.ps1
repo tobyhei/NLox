@@ -1,0 +1,3 @@
+cd .\NLoxCodegen
+dotnet build
+

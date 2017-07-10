@@ -11,6 +11,7 @@ namespace NLox {
             TR visitBinaryExpr(Binary expr);
             TR visitGroupingExpr(Grouping expr);
             TR visitLiteralExpr(Literal expr);
+            TR visitLogicalExpr(Logical expr);
             TR visitUnaryExpr(Unary expr);
             TR visitVariableExpr(Variable expr);
         }
@@ -78,6 +79,25 @@ namespace NLox {
             public override TR accept<TR>(IVisitor<TR> visitor)
             {
                 return visitor.visitLiteralExpr(this);
+            }
+        }
+
+        public class Logical : Expr
+        {
+            public readonly Expr left;
+            public readonly Token @operator;
+            public readonly Expr right;
+
+            public Logical(Expr left, Token @operator, Expr right)
+            {
+                this.left = left;
+                this.@operator = @operator;
+                this.right = right;
+            }
+
+            public override TR accept<TR>(IVisitor<TR> visitor)
+            {
+                return visitor.visitLogicalExpr(this);
             }
         }
 

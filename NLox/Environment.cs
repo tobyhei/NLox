@@ -13,7 +13,7 @@ namespace NLox
 
         public void assign(Token name, object value)
         {
-            if (!values.ContainsKey(name.lexeme))
+            if (values.ContainsKey(name.lexeme))
             {
                 values[name.lexeme] = value;
                 return;

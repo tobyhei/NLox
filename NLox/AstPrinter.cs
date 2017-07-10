@@ -41,5 +41,10 @@ namespace NLox
 
         public string visitAssignExpr(Expr.Assign expr)
             => parenthesize(expr.name.lexeme, expr.value);
+
+        public string visitLogicalExpr(Expr.Logical expr)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

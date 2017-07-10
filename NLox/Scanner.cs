@@ -86,12 +86,6 @@ namespace NLox
                     break;
                 case '\"': consumeString(); break;
                 case '\'': consumeString(); break;
-                case 'o':
-                    if (peek() == 'r')
-                    {
-                        addToken(TokenType.OR);
-                    }
-                    break;
                 case char c when isDigit(c): consumeNumber(); break;
                 case char a when isAlpha(a): consumeIdentifier(); break;
                 default: Lox.error(line, "Unexpected character."); break;
